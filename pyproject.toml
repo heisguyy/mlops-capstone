@@ -1,0 +1,5 @@
+# `pytest` configurations
+[tool.pytest.ini_options]
+testpaths = [
+    "./tests/unit"
+]
