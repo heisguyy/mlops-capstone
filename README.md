@@ -1,7 +1,7 @@
-Cycling duration
+House prices
 ==============================
 
-Predicting the duration of cycling in London. 
+Predicting the price of houses in 14 states in the United States of America. 
 
 Project Structure
 ------------
@@ -11,9 +11,9 @@ Project Structure
     │── .vscode/settings.json   <- Visual studio code IDE config files.
     ├── artifacts               <- Trained and serialized models, vectorizers, encoders, tokenizers, etc.
     ├── data                    <- Data used for the project
-    ├── experiments             <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                              the creator's initials, and a short `-` delimited description, e.g.
-    │                              `1.0-jqp-initial-data-exploration`.
+    ├── experiments             <- Jupyter notebooks. Naming convention is a number (for ordering)
+    │                              and a short `-` delimited description, e.g.
+    │                              `1.0-initial-data-exploration`.
     ├── infrastructure          <- IaC files.
     │   ├── modules/            <- Modules of various components of the deployment infrastructure.
     │   ├── vars/               <- Defined variables for stages of the development lifecycle.

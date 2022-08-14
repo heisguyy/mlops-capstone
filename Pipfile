@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+lightgbm = "*"
 
 [dev-packages]
 pandas = "*"
@@ -15,6 +16,10 @@ ipykernel = "*"
 wandb = "*"
 kaggle = "*"
 missingno = "*"
+xgboost = "*"
+catboost = "*"
+pylint = "*"
+prefect = "==2.0b5"
 
 [requires]
 python_version = "3.10"
