@@ -3,28 +3,37 @@ from pickle import dump
 import warnings
 warnings.filterwarnings("ignore")
 from typing import Tuple
+
+from tempfile import TemporaryDirectory
+from kaggle import api
+
 from datetime import date
 import pandas as pd
 import wandb
 from wandb.catboost import WandbCallback
-
-
-from prefect import task, flow, get_run_logger
-from prefect.deployments import Deployment
-from prefect.orion.schemas.schedules import CronSchedule
-from prefect.flow_runners import SubprocessFlowRunner
-
 
 from catboost import CatBoostRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
-wandb.login(key=os.getenv(key="WANDB_KEY"))
+from prefect import task, flow, get_run_logger
+from prefect.deployments import Deployment
+from prefect.orion.schemas.schedules import CronSchedule
+from prefect.task_runners import SequentialTaskRunner
+
+os.environ["WANDB_SILENT"] = "true"
 
 @task
 def get_data() -> pd.DataFrame:
-    data = pd.read_csv("")
+    with TemporaryDirectory() as tmpdirname:
+        api.dataset_download_files(
+            dataset="ahmedshahriarsakib/usa-real-estate-dataset",
+            path=tmpdirname,
+            unzip=True
+        )
+        data = pd.read_csv(tmpdirname+"/realtor-data.csv")
+
     return data
 
 @task
@@ -58,7 +67,7 @@ def prepare_data(data,current_date) -> Tuple[pd.DataFrame,pd.Series]:
     data["location"] = encoder.fit_transform(data["location"])
     logger.info("Categorical feature encoded dropped...")
 
-    artifact = wandb.Artifact("capstone-artifacts","preprocessor")
+    artifact = wandb.Artifact("capstone-encoder","preprocessor")
     with artifact.new_file(current_date+".bin", mode="wb") as file:
         dump(encoder,file)
     wandb.log_artifact(artifact)
@@ -75,6 +84,8 @@ def train_model(features,labels,current_date):
     logger = get_run_logger()
 
     x_train, x_val, y_train, y_val =train_test_split(features,labels,test_size=0.2,random_state=45,shuffle=True)
+    logger.info("Dataset split...")
+
     wandb.config = {
         'learning_rate': 0.07632400095462799,
         'random_seed': 0,
@@ -84,36 +95,37 @@ def train_model(features,labels,current_date):
         'silent': True,
         'eval_metric': "RMSE"
     }
-
     model = CatBoostRegressor(**wandb.config)
-
     model.fit(x_train,y_train,eval_set=(x_val,y_val),callbacks=[WandbCallback()])
+    logger.info("Model trained...")
+
     y_preds = model.predict(x_val)
     error = mean_squared_error(y_val,y_preds,squared=False)
     wandb.summary["error"] = error
+    logger.info("Error calculated and logged...")
 
-    artifact = wandb.Artifact("capstone-artifacts","model")
-    with artifact.new_file(current_date+".bin", mode="wb") as file:
+    artifact = wandb.Artifact("capstone-model","model")
+    with artifact.new_file(current_date+".cbm", mode="wb") as file:
         dump(model,file)
-    
     wandb.log_artifact(artifact)
+    logger.info("Model logged...")
 
 
-@flow
+@flow(task_runner=SequentialTaskRunner())
 def main():
-    wandb.init(project="capstone-mlops", entity="heisguyy", name=date, tags=["Continual learning"])
-    today = date.today()
-    data = get_data()
-    features, labels = prepare_data(data,today)
+    today = f"{date.today()}"
+    wandb.init(project="capstone-mlops", entity="heisguyy", name=today, tags=["Continual learning"])
+    data = get_data().result()
+    features, labels = prepare_data(data,today).result()
     train_model(features,labels,today)
     wandb.finish()
 
-main()
 
-
-# Deployment(
-#     flow=main,
-#     name="model_training",
-#     schedule=CronSchedule(cron="0 9 15 * *"),
-#     flow_runner=SubprocessFlowRunner()
-# )
+deployment = Deployment.build_from_flow(
+    flow=main,
+    name="continuous_learning",
+    version="0.0.1",
+    schedule= CronSchedule(cron="0 12 * * 0"),
+    tags=["mlops-capstone"]
+    )
+deployment.apply()
