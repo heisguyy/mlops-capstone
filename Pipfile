@@ -9,6 +9,7 @@ wandb = "*"
 prefect = "*"
 mangum = "*"
 pylint = "*"
+pytest = "*"
 
 [dev-packages]
 pandas = "*"
@@ -26,6 +27,7 @@ greenlet = "*"
 black = "*"
 isort = "*"
 pre-commit = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.10"

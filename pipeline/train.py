@@ -9,7 +9,7 @@ import pandas as pd
 import wandb
 from catboost import CatBoostRegressor
 from kaggle import api
-from prefect import flow, get_run_logger, task
+from prefect import flow, task
 from prefect.deployments import Deployment
 from prefect.orion.schemas.schedules import CronSchedule
 from prefect.task_runners import SequentialTaskRunner
@@ -42,7 +42,7 @@ def get_data() -> pd.DataFrame:
 
 @task
 def prepare_data(
-    data: pd.DataFrame, current_date: str
+    data: pd.DataFrame, current_date: str = None
 ) -> Tuple[pd.DataFrame, pd.Series]:
     """Prepare data for retraining and log preprocessing artifacts to weights and biases.
 
@@ -53,16 +53,13 @@ def prepare_data(
     Returns:
         Tuple[pd.DataFrame,pd.Series]: features and labels respectively
     """
-    logger = get_run_logger()
 
     data.drop_duplicates(inplace=True)
-    logger.info("Duplicates dropped...")
 
     data.drop(["full_address", "street", "status", "sold_date"], 1, inplace=True)
-    logger.info("Extra columns dropped...")
 
     data.dropna(inplace=True)
-    logger.info("Empty values dropped...")
+    data.zip_code = data.zip_code.astype(int)
 
     rows_to_drop = data[data["price"] > 50000000].index.to_list()
     rows_to_drop.extend(data[data.bed > 40].index.to_list())
@@ -70,7 +67,6 @@ def prepare_data(
     rows_to_drop.extend(data[data.acre_lot > 15000].index.to_list())
     rows_to_drop.extend(data[data.house_size > 200000].index.to_list())
     data.drop(rows_to_drop, 0, inplace=True)
-    logger.info("Outliers dropped...")
 
     data.city = data.city.apply(lambda x: "_".join(x.lower().split()))
     data.state = data.state.apply(lambda x: "_".join(x.lower().split()))
@@ -79,13 +75,12 @@ def prepare_data(
     data.reset_index(inplace=True, drop=True)
     encoder = LabelEncoder()
     data["location"] = encoder.fit_transform(data["location"])
-    logger.info("Categorical feature encoded dropped...")
 
-    artifact = wandb.Artifact("capstone-encoder", "preprocessor")
-    with artifact.new_file(current_date + ".bin", mode="wb") as file:
-        dump(encoder, file)
-    wandb.log_artifact(artifact)
-    logger.info("Label encoder sent to weights and biases...")
+    if current_date is not None:
+        artifact = wandb.Artifact("capstone-encoder", "preprocessor")
+        with artifact.new_file(current_date + ".bin", mode="wb") as file:
+            dump(encoder, file)
+        wandb.log_artifact(artifact)
 
     features = data.drop("price", 1)
     labels = data.price
@@ -102,12 +97,10 @@ def train_model(features: pd.DataFrame, labels: pd.Series, current_date: str):
         labels (pd.Series): Amount to be predicted
         current_date (str): current date
     """
-    logger = get_run_logger()
 
     x_train, x_val, y_train, y_val = train_test_split(
         features, labels, test_size=0.2, random_state=45, shuffle=True
     )
-    logger.info("Dataset split...")
 
     wandb.config = {
         "learning_rate": 0.07632400095462799,
@@ -120,18 +113,15 @@ def train_model(features: pd.DataFrame, labels: pd.Series, current_date: str):
     }
     model = CatBoostRegressor(**wandb.config)
     model.fit(x_train, y_train, eval_set=(x_val, y_val), callbacks=[WandbCallback()])
-    logger.info("Model trained...")
 
     y_preds = model.predict(x_val)
     error = mean_squared_error(y_val, y_preds, squared=False)
     wandb.summary["error"] = error
-    logger.info("Error calculated and logged...")
 
     artifact = wandb.Artifact("capstone-model", "model")
     with artifact.new_file(current_date + ".cbm", mode="wb") as file:
         dump(model, file)
     wandb.log_artifact(artifact)
-    logger.info("Model logged...")
 
 
 @flow(task_runner=SequentialTaskRunner())

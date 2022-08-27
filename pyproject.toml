@@ -13,3 +13,10 @@ extend-exclude = 'src/extensions/'
 [tool.isort]
 profile = "black"
 skip_glob = ['src/extensions/*']
+
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::FutureWarning",
+    "ignore::DeprecationWarning"
+]
