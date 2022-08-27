@@ -5,8 +5,11 @@ from catboost import Pool
 from fastapi import FastAPI, status
 from mangum import Mangum
 
-from .monitor import log_inputs_for, log_outputs_for  # pylint: disable=unused-import
-from .schema import InferenceInput, InferenceOutput
+from .monitor import (  # pylint: disable=unused-import,import-error
+    log_inputs_for,
+    log_outputs_for,
+)
+from .schema import InferenceInput, InferenceOutput  # pylint: disable=import-error
 
 app = FastAPI(
     title="House Predictor API",
@@ -24,10 +27,9 @@ def startup():
     # pylint: disable=global-variable-undefined
 
     global MODEL, ENCODER
-
-    with open("artifacts/2022-08-15.cbm", "rb") as pickle_file:
+    with open("src/artifacts/2022-08-15.cbm", "rb") as pickle_file:
         MODEL = load(pickle_file)
-    with open("artifacts/2022-08-15.bin", "rb") as pickle_file:
+    with open("src/artifacts/2022-08-15.bin", "rb") as pickle_file:
         ENCODER = load(pickle_file)
 
 
