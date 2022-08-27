@@ -7,6 +7,8 @@ name = "pypi"
 lightgbm = "*"
 wandb = "*"
 prefect = "*"
+mangum = "*"
+pylint = "*"
 
 [dev-packages]
 pandas = "*"
@@ -21,6 +23,8 @@ xgboost = "*"
 catboost = "*"
 pylint = "*"
 greenlet = "*"
+black = "*"
+isort = "*"
 
 [requires]
 python_version = "3.10"

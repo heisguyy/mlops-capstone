@@ -1,5 +1,7 @@
-# `pytest` configurations
-[tool.pytest.ini_options]
-testpaths = [
-    "./tests/unit"
+[tool.pylint.messages_control]
+
+disable = [
+    "no-name-in-module",
+    "missing-module-docstring",
+    "missing-class-docstring"
 ]

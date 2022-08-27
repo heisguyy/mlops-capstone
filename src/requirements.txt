@@ -1,0 +1,7 @@
+fastapi
+wandb
+requests
+mangum
+catboost
+scikit-learn
+pydantic 

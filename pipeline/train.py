@@ -1,31 +1,32 @@
 import os
-from pickle import dump
 import warnings
-warnings.filterwarnings("ignore")
+from pickle import dump
 from typing import Tuple
-
-from tempfile import TemporaryDirectory
-from kaggle import api
-
 from datetime import date
+from tempfile import TemporaryDirectory
 import pandas as pd
+from kaggle import api
 import wandb
 from wandb.catboost import WandbCallback
-
 from catboost import CatBoostRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-
 from prefect import task, flow, get_run_logger
 from prefect.deployments import Deployment
 from prefect.orion.schemas.schedules import CronSchedule
 from prefect.task_runners import SequentialTaskRunner
 
+warnings.filterwarnings("ignore")
 os.environ["WANDB_SILENT"] = "true"
 
 @task
 def get_data() -> pd.DataFrame:
+    """Gets data from kaggle.
+
+    Returns:
+        pd.DataFrame: Data to retrain model on.
+    """
     with TemporaryDirectory() as tmpdirname:
         api.dataset_download_files(
             dataset="ahmedshahriarsakib/usa-real-estate-dataset",
@@ -37,7 +38,16 @@ def get_data() -> pd.DataFrame:
     return data
 
 @task
-def prepare_data(data,current_date) -> Tuple[pd.DataFrame,pd.Series]:
+def prepare_data(data: pd.DataFrame, current_date: str) -> Tuple[pd.DataFrame,pd.Series]:
+    """Prepare data for retraining and log preprocessing artifacts to weights and biases.
+
+    Args:
+        data (pd.DataFrame): Updated dataset from kaggle.
+        current_date (str): Current date of retraining.
+
+    Returns:
+        Tuple[pd.DataFrame,pd.Series]: features and labels respectively
+    """
     logger = get_run_logger()
 
     data.drop_duplicates(inplace=True)
@@ -45,7 +55,6 @@ def prepare_data(data,current_date) -> Tuple[pd.DataFrame,pd.Series]:
 
     data.drop(["full_address","street","status","sold_date"],1,inplace=True)
     logger.info("Extra columns dropped...")
-
 
     data.dropna(inplace=True)
     logger.info("Empty values dropped...")
@@ -57,7 +66,7 @@ def prepare_data(data,current_date) -> Tuple[pd.DataFrame,pd.Series]:
     rows_to_drop.extend(data[data.house_size>200000].index.to_list())
     data.drop(rows_to_drop,0,inplace=True)
     logger.info("Outliers dropped...")
-    
+
     data.city = data.city.apply(lambda x: "_".join(x.lower().split()))
     data.state = data.state.apply(lambda x: "_".join(x.lower().split()))
     data["location"] = data.state + "-" + data.city
@@ -80,10 +89,23 @@ def prepare_data(data,current_date) -> Tuple[pd.DataFrame,pd.Series]:
     return features,labels
 
 @task
-def train_model(features,labels,current_date):
+def train_model(features: pd.DataFrame, labels: pd.Series, current_date: str):
+    """Trains model and logs the model to weights and biases.
+
+    Args:
+        features (pd.DataFrame): Features for prediction
+        labels (pd.Series): Amount to be predicted
+        current_date (str): current date
+    """
     logger = get_run_logger()
 
-    x_train, x_val, y_train, y_val =train_test_split(features,labels,test_size=0.2,random_state=45,shuffle=True)
+    x_train, x_val, y_train, y_val = train_test_split(
+        features,
+        labels,
+        test_size=0.2,
+        random_state=45,
+        shuffle=True
+    )
     logger.info("Dataset split...")
 
     wandb.config = {
@@ -113,6 +135,11 @@ def train_model(features,labels,current_date):
 
 @flow(task_runner=SequentialTaskRunner())
 def main():
+    """
+    Runs previous function and definition of prefect flow
+    """
+    #pylint: disable=no-member
+
     today = f"{date.today()}"
     wandb.init(project="capstone-mlops", entity="heisguyy", name=today, tags=["Continual learning"])
     data = get_data().result()
