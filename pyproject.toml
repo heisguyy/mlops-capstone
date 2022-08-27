@@ -3,5 +3,13 @@
 disable = [
     "no-name-in-module",
     "missing-module-docstring",
-    "missing-class-docstring"
+    "missing-class-docstring",
+    "ungrouped-imports"
 ]
+
+[tool.black]
+extend-exclude = 'src/extensions/'
+
+[tool.isort]
+profile = "black"
+skip_glob = ['src/extensions/*']

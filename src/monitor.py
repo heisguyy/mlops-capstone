@@ -1,10 +1,10 @@
 import json
-from typing import List
 from enum import Enum
+from typing import List
+
 import requests
 
-
-LOGGING_ENDPOINT = 'http://127.0.0.1:2772'
+LOGGING_ENDPOINT = "http://127.0.0.1:2772"
 
 
 class LogType(str, Enum):
@@ -24,10 +24,10 @@ def log_inputs_for(request_id: str, inputs: List):
     requests.post(
         LOGGING_ENDPOINT,
         json={
-            'type': LogType.INPUTS,
-            'request_id': request_id,
-            'inputs': json.dumps(inputs)
-        }
+            "type": LogType.INPUTS,
+            "request_id": request_id,
+            "inputs": json.dumps(inputs),
+        },
     )
 
 
@@ -43,8 +43,8 @@ def log_outputs_for(request_id: str, results: List):
     requests.post(
         LOGGING_ENDPOINT,
         json={
-            'type': LogType.RESULTS,
-            'request_id': request_id,
-            'results': json.dumps(results)
-        }
+            "type": LogType.RESULTS,
+            "request_id": request_id,
+            "results": json.dumps(results),
+        },
     )

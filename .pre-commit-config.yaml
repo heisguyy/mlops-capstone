@@ -17,7 +17,7 @@ repos:
   rev: 22.6.0
   hooks:
     - id: black
-      language_version: python3.9
+      language_version: python3.8
 - repo: local
   hooks:
     - id: pylint
@@ -30,14 +30,14 @@ repos:
         "-sn", # Don't display the score
         "--recursive=y"
       ]
-- repo: local
-  hooks:
-    - id: pytest-check
-      name: pytest-check
-      entry: pytest
-      language: system
-      pass_filenames: false
-      always_run: true
-      args: [
-        "tests/unit/"
-      ]
+# - repo: local
+#   hooks:
+#     - id: pytest-check
+#       name: pytest-check
+#       entry: pytest
+#       language: system
+#       pass_filenames: false
+#       always_run: true
+#       args: [
+#         "tests/unit/"
+#       ]
