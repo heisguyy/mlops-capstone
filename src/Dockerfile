@@ -24,4 +24,4 @@ RUN wandb login $WANDB_KEY
 RUN wandb artifact get --root artifacts/ heisguyy/capstone-mlops/capstone-model:latest
 RUN wandb artifact get --root artifacts/ heisguyy/capstone-mlops/capstone-encoder:latest
 
-CMD ["main.app.handler"]
+CMD ["main.handler"]

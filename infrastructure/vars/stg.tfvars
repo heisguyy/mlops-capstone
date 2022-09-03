@@ -1,0 +1,6 @@
+logs_bucket = "stg-evidently-logs"
+lambda_function_local_path = "../src/main.py"
+docker_image_local_path = "Dockerfile"
+ecr_repo_name = "stg_capstone_images"
+lambda_function_name = "stg_capstone_lambda"
+endpoint_name = "capstone_endpoint"

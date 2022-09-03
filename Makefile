@@ -12,6 +12,6 @@ integration-test: unit-test
 	bash
 
 build: integration-test
-	docker build -t .
+	docker build --build-arg WANDB_KEY=202ada5746d12050a9ba2b9834945a9c1c973d08 -t mlops-capstone:latest .
 
 publish: build

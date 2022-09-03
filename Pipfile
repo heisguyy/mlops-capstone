@@ -10,6 +10,7 @@ prefect = "*"
 mangum = "*"
 pylint = "*"
 pytest = "*"
+evidently = "*"
 
 [dev-packages]
 pandas = "*"

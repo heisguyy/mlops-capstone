@@ -33,7 +33,7 @@ def startup():
         ENCODER = load(pickle_file)
 
 
-@app.get("/")
+@app.post("/")
 def home() -> dict:
     # pylint: disable=missing-function-docstring
     return {"Message": "Welcome to my capstone project for the mlops zoomcamp."}
