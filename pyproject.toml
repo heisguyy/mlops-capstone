@@ -1,5 +1,22 @@
-# `pytest` configurations
+[tool.pylint.messages_control]
+
+disable = [
+    "no-name-in-module",
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "ungrouped-imports"
+]
+
+[tool.black]
+extend-exclude = 'src/extensions/'
+
+[tool.isort]
+profile = "black"
+skip_glob = ['src/extensions/*']
+
+
 [tool.pytest.ini_options]
-testpaths = [
-    "./tests/unit"
+filterwarnings = [
+    "ignore::FutureWarning",
+    "ignore::DeprecationWarning"
 ]
