@@ -1,13 +1,16 @@
 House prices
 ==============================
 
-Predicting the price of houses in 14 states in the United States of America. 
+Predicting the price of houses in 14 states in the United States of America.
+
+
+Note: Integration test and continuous integration aren't possible without localstack pro version. Because of the complex structure that the
 
 Project Structure
 ------------
     ├── .github/workflows       <- CI/CD and automation files.
-    │   ├── deploy.yml          <- Github action for continuous deployment (CD). 
-    │   └── integration.yml     <- Github action for continuous integration tests (CI). 
+    │   ├── deploy.yml          <- Github action for continuous deployment (CD).
+    │   └── integration.yml     <- Github action for continuous integration tests (CI).
     │── .vscode/settings.json   <- Visual studio code IDE config files.
     ├── artifacts               <- Trained and serialized models, vectorizers, encoders, tokenizers, etc.
     ├── data                    <- Data used for the project
@@ -17,13 +20,13 @@ Project Structure
     ├── infrastructure          <- IaC files.
     │   ├── modules/            <- Modules of various components of the deployment infrastructure.
     │   ├── vars/               <- Defined variables for stages of the development lifecycle.
-    │   ├── main.tf             <- Terraform declaration of backend and infrastructure. 
+    │   ├── main.tf             <- Terraform declaration of backend and infrastructure.
     │   └── variables.tf        <- Terraform initialization of variables for the infrastructure.
     ├── src                     <- Source code for use in this project.
     │   ├── __init__.py         <- Makes src a Python module
     │   ├── main.py             <- Scripts for API.
     │   └── Dockerfile          <- Blueprint for building docker container.
-    ├── tests                   <- Tests codes to ensure quality of codes. 
+    ├── tests                   <- Tests codes to ensure quality of codes.
     │   ├── integration/        <- Codes to ensure changes haven't broken any essential feature.
     │   └── unit/               <- Codes to ensure that each function/unit is performing as expected.
     ├── .env                    <- Contains environmental variables like app secrets. This file should not
