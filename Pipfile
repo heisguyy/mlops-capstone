@@ -11,6 +11,8 @@ mangum = "*"
 pylint = "*"
 pytest = "*"
 evidently = "*"
+terraform-local = "*"
+awscli-local = "*"
 
 [dev-packages]
 pandas = "*"
