@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn:python3.8
+FROM public.ecr.aws/lambda/python:3.9
 
 # Extension Code
 COPY extensions/runner /opt/extensions/model-monitor-extension
@@ -15,8 +15,6 @@ WORKDIR /var/task
 COPY *.py .
 COPY requirements.txt .
 
-
-RUN /usr/local/bin/python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 ARG WANDB_KEY

@@ -4,7 +4,20 @@ from fastapi.testclient import TestClient
 from src.main import app
 
 
-def test_query_api():
+def test_root_endpoint():
+    """
+    Test the root endpoint of the API
+    """
+    with TestClient(app) as api:
+        response = api.get(
+            "/",
+        )
+        assert response.json() == {
+            "Message": "Welcome to my capstone project for the mlops zoomcamp."
+        }
+
+
+def test_predict_data():
     """
     Test the predict endpoint of the API
     """

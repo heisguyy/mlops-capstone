@@ -1,6 +1,7 @@
 from pickle import load
 
 import numpy as np
+import uvicorn
 from catboost import Pool
 from fastapi import FastAPI, status
 from mangum import Mangum
@@ -33,7 +34,7 @@ def startup():
         ENCODER = load(pickle_file)
 
 
-@app.post("/")
+@app.get("/")
 def home() -> dict:
     # pylint: disable=missing-function-docstring
     return {"Message": "Welcome to my capstone project for the mlops zoomcamp."}
@@ -51,7 +52,7 @@ def predict_data(body: InferenceInput):
 
     Returns
         price (InferenceOutput): returns price in the format of int defined by the
-        pydantic class InteferenceOutput
+        pydantic class InferenceOutput
     """
 
     # log_inputs_for(body)
@@ -88,3 +89,6 @@ def predict_data(body: InferenceInput):
 
 
 handler = Mangum(app=app)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=5000)
