@@ -12,15 +12,15 @@ if [ "${LOCAL_IMAGE_NAME}" == "" ]; then
     aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123456789012.dkr.ecr.us-east-1.amazonaws.com
     cd ../src
     if [[ -z "${GITHUB_ACTIONS}" ]]; then
-        docker buildx build --platform=linux/amd64 --build-arg WANDB_KEY=${WANDB_KEY} -t ${LOCAL_IMAGE_NAME} .
+        docker buildx build --platform=linux/amd64 -t ${LOCAL_IMAGE_NAME} .
     else
-        docker build --build-arg WANDB_KEY=${WANDB_KEY} -t ${LOCAL_IMAGE_NAME} .
+        docker build -t ${LOCAL_IMAGE_NAME} .
     fi
 else
     echo "no need to build image ${LOCAL_IMAGE_NAME}"
 fi
 
-docker run --detach -p 9000:8080 ${LOCAL_IMAGE_NAME}
+export CONTAINER_ID=`docker run --detach -p 9000:8080 -e "WANDB_KEY=${WANDB_KEY}" ${LOCAL_IMAGE_NAME}`
 
 sleep 5
 
@@ -29,8 +29,12 @@ pipenv run python integration.py
 
 ERROR_CODE=$?
 
-# if [ ${ERROR_CODE} != 0 ]; then
-#     docker logs mlops:capstone
-#     docker stop mlops:capstone
-#     exit ${ERROR_CODE}
-# fi
+if [ ${ERROR_CODE} != 0 ]; then
+    docker logs ${CONTAINER_ID}
+    docker stop ${CONTAINER_ID}
+    docker rm ${CONTAINER_ID}
+    exit ${ERROR_CODE}
+fi
+
+docker stop ${CONTAINER_ID}
+docker rm ${CONTAINER_ID}
