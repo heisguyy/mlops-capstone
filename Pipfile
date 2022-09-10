@@ -13,6 +13,7 @@ pytest = "*"
 evidently = "*"
 terraform-local = "*"
 awscli-local = "*"
+deepdiff = "*"
 
 [dev-packages]
 pandas = "*"

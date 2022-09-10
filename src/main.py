@@ -1,6 +1,9 @@
+import os
 from pickle import load
 
 import numpy as np
+import uvicorn
+import wandb
 from catboost import Pool
 from fastapi import FastAPI, status
 from mangum import Mangum
@@ -11,6 +14,7 @@ from .monitor import (  # pylint: disable=unused-import,import-error
 )
 from .schema import InferenceInput, InferenceOutput  # pylint: disable=import-error
 
+wandb.login(key=os.getenv("WANDB_KEY"))
 app = FastAPI(
     title="House Predictor API",
     description="This API predicts prices of houses in the United States of America",
@@ -27,13 +31,29 @@ def startup():
     # pylint: disable=global-variable-undefined
 
     global MODEL, ENCODER
-    with open("src/artifacts/2022-08-15.cbm", "rb") as pickle_file:
-        MODEL = load(pickle_file)
-    with open("src/artifacts/2022-08-15.bin", "rb") as pickle_file:
-        ENCODER = load(pickle_file)
+
+    api = wandb.Api()
+    model_path = api.artifact(
+        "heisguyy/capstone-mlops/capstone-model:latest"
+    ).download()
+    with open(f"{model_path}/2022-08-15.cbm", "rb") as model_file:
+        MODEL = load(model_file)
+    encoder_path = api.artifact(
+        "heisguyy/capstone-mlops/capstone-encoder:latest"
+    ).download()
+    with open(f"{encoder_path}/2022-08-15.bin", "rb") as encoder_file:
+        ENCODER = load(encoder_file)
 
 
-@app.post("/")
+@app.on_event("shutdown")
+def shutdown():
+    """
+    Instructions to execute on shutdown.
+    """
+    wandb.finish()
+
+
+@app.get("/")
 def home() -> dict:
     # pylint: disable=missing-function-docstring
     return {"Message": "Welcome to my capstone project for the mlops zoomcamp."}
@@ -51,7 +71,7 @@ def predict_data(body: InferenceInput):
 
     Returns
         price (InferenceOutput): returns price in the format of int defined by the
-        pydantic class InteferenceOutput
+        pydantic class InferenceOutput
     """
 
     # log_inputs_for(body)
@@ -88,3 +108,6 @@ def predict_data(body: InferenceInput):
 
 
 handler = Mangum(app=app)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

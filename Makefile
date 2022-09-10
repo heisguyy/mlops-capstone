@@ -9,7 +9,7 @@ unit-test: quality-checks
 	pytest .
 
 integration-test: unit-test
-	bash
+	bash .integration_test/integration
 
 build: integration-test
 	docker build --build-arg WANDB_KEY=202ada5746d12050a9ba2b9834945a9c1c973d08 -t mlops-capstone:latest .
