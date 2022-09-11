@@ -3,8 +3,15 @@ House prices
 
 Predicting the price of houses in 14 states in the United States of America.
 
+docker run --detach \
+-e WANDB_KEY=202ada5746d12050a9ba2b9834945a9c1c973d08 \
+-e MODEL_MONITOR_S3_BUCKET=testing \
+-e IS_TEST=true \
+-p 8000:8080 \
+--add-host=host.docker.internal:127.0.0.1 \
+mlops-capstone:monitoring
 
-Note: Integration test and continuous integration aren't possible without localstack pro version. Because of the complex structure that the
+
 
 Project Structure
 ------------

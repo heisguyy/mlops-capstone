@@ -5,4 +5,3 @@ mangum
 catboost
 scikit-learn
 pydantic
-uvicorn
