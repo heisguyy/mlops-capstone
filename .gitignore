@@ -18,5 +18,5 @@ artifacts/
 __pycache__
 .pytest_cache/
 
-
 .terraform/
+.terraform.lock.hcl
