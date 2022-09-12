@@ -40,9 +40,8 @@ jobs:
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
       - name: Integration Test
-        working-directory: 'integration_test'
         run: |
-          WANDB_KEY=${{ env.WANDB_KEY }} ./integration.sh
+          WANDB_KEY=${{ env.WANDB_KEY }} integration_test/integration.sh
 
 
   tf-plan:
