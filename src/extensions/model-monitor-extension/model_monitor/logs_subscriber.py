@@ -1,6 +1,6 @@
 import json
-from http.server import HTTPServer, BaseHTTPRequestHandler
 from concurrent.futures.thread import ThreadPoolExecutor
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from model_monitor.logs_manager import LogsManager
 

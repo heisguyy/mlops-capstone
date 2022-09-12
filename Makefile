@@ -1,5 +1,4 @@
-.SILENT: quality-checks unit-test integration-test build setup
-WANDB_KEY=
+.SILENT: quality-checks unit-test integration-test build setup check-infrastructure deploy-prefect
 
 quality-checks:
 	black .
@@ -12,9 +11,18 @@ unit-test: quality-checks
 integration-test: unit-test
 	WANDB_KEY=${WANDB_KEY} integration_test/integration.sh
 
-build: integration-test
-	docker build --build-arg -t mlops-capstone:latest .
+check-infrastructure:
+	cd infrastructure; \
+	terraform init; \
+	terraform plan -var-file=vars/prod.tfvars
+
+deploy-prefect:
+	cd pipeline; \
+	python train.py \
+	prefect work-queue preview default --hours 100000 \
+	prefect agent start --work-queue "default"
 
 setup:
-	pipenv install --dev
+	pipenv install
+	pipenv shell
 	pre-commit install

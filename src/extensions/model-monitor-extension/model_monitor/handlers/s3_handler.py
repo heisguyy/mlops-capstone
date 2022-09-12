@@ -1,9 +1,9 @@
 import random
 from typing import List
-import boto3
 
+import boto3
 from model_monitor.configuration import Configuration
-from model_monitor.handlers.base_handler import LogsHandler, LogRecord
+from model_monitor.handlers.base_handler import LogRecord, LogsHandler
 
 
 class S3Handler(LogsHandler):

@@ -5,15 +5,6 @@ Problem statement
 This project aims at building an end to end machine learning system to predict the prices of houses in America (14 States).  People are usually faced with the problem of valuing a house fairly whether it's a prospective buyer or a seller. They want to get a fair compenstaion for whatever they are sacrificing. The government can also accurately value the property of a citizen thereby preventing any attempt at fraud. A [kaggle dataset](https://www.kaggle.com/datasets/ahmedshahriarsakib/usa-real-estate-dataset) that is updated weekly was used to train the model used in this system. The features from this datasetb used to build the model where number of beds, number of bathrooms, size of land on which the property sits, zip code of area, size of the house and a derived variable from state and city, location. The system would be deployed as API, so anyone can integrate it into their product or build a product around it.
 
 ------------
-<!--
-docker run --detach \
--e WANDB_KEY=202ada5746d12050a9ba2b9834945a9c1c973d08 \
--e MODEL_MONITOR_S3_BUCKET=testing \
--e IS_TEST=true \
--p 8000:8080 \
--v ~/.aws:/root/.aws:ro  \
-mlops-capstone:latest -->
-
 
 Project Structure
 ------------
@@ -61,15 +52,64 @@ Project Structure
     └── README.md               <- The top-level README for developers/users using this project.
 
 --------
-Approach
+Stack
 --------
-hcwcviwecveckecvwecewc ehuwjcve2cuecye2yuc uy2
+
+Weights & Biases - Experimentation and Model Registry \
+Prefect and Prefect Cloud - Workflow orchestration \
+AWS(Lambda, S3, ECR and API gateway) and FastAPI- Cloud Provider and Web framework. \
+Terraform - IaC \
+Pytest - Unit tests \
+Black and Isort - Formatter \
+pre-commit: pre commit checks \
+Makefile: Code Automation tool \
+Github Action: CI/CD \
+Docker, Docker compose - Integration test.
 
 --------
 Steps to run the project
 --------
+To have run this project you need to have python and pipenv installed on your system.
 
+Step 1: Clone the repo and move into it.
+```
+git clone https://github.com/heisguyy/mlops-capstone.git && cd mlops-capstone
+```
+Step 2: Setup environment and pre-commit
+```
+make setup
+```
+Step 3: Create a [wandb](https://wandb.ai/site) account if you don't have, create a project called `capstone-mlops` and get your API Key for your weights and bias account and export it to you terminal. You can add this command to `~/.bashrc` to add it permanently or just rerun the command everytime if you close your terminal and you want to continue testing.
+```
+export WANDB_KEY=<your-key>
+```
+Step 4: Create a kaggle account if you do not have one, get your kaggle API token. Download it, create a directory named `.kaggle` in your home directory and add the json file downloaded when you created the API token
+Step 5: Download the dataset into the `data` folder.
+```
+kaggle datasets download -d ahmedshahriarsakib/usa-real-estate-dataset -p data/ --unzip
+```
+Step 6: Go to the `experiments` folder, open the jupyter notebook files and run them according to their numbering.
+Step 7: Run all quality checks, unit test and integration test.
+```
+make integration-test
+```
+Step 8: Check terraform infrastructure.
+```
+make check-infrastructure
+```
+Step 9: Create an prefect cloud account, create an API key and a workspace. Configure your API key and workspace locally.
+```
+prefect cloud login -k <your-api-key>
+```
+you will be prompted to choose the workspace you created and a profile name.
+Step 10: Deploy flow to cloud.
+```
+make deploy-prefect
+```
+
+
+N.B: Prefect pipeline for monitoring is not done and I also have a bug in the deployment causing the API gateway to not respond to requests. I will be working on this after this submission but you won't see it because you will be required reviewing the last commit before my submission.
 
 --------
 
-<p><small>This project uses <a target="_blank" href="https://github.com/heisguyy/cookiecutter-data-science">Olajide Oluwatosin's modification</a> of the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>.
+<p><small>This project uses <a target="_blank" href="https://github.com/heisguyy/cookiecutter-data-science">Olajide Oluwatosin's modification</a> of the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a> with a little more modifications.
