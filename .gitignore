@@ -9,7 +9,7 @@
 
 # exclude data and artifacts from source control by default
 data/*
-!/data/processed_features
+!/data/processed_features.csv
 artifacts/
 
 # Mac OS-specific storage files
