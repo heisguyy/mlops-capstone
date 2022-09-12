@@ -25,6 +25,9 @@ jobs:
 
       - name: Run Unit tests
         run: pipenv run pytest
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
 
       - name: Lint
         run: pipenv run pylint --recursive=y .
