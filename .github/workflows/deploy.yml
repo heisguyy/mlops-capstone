@@ -64,7 +64,7 @@ jobs:
         env:
           LAMBDA_FUNCTION: ${{ steps.tf-apply.outputs.lambda_function }}
           WANDB_KEY: ${{ env.WANDB_KEY }}
-          MODEL_MONITOR_S3_BUCKET: ${{ steps.tf-apply.outputslogs_bucket }}
+          MODEL_MONITOR_S3_BUCKET: ${{ steps.tf-apply.outputs.logs_bucket }}
         run: |
           variables="{ \
                     MODEL_MONITOR_S3_BUCKET=$MODEL_MONITOR_S3_BUCKET, WANDB_KEY=$WANDB_KEY \
