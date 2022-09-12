@@ -105,4 +105,4 @@ def predict_data(body: InferenceInput):
     return {"price": price.item()}
 
 
-handler = Mangum(app=app)
+lambda_handler = Mangum(app=app)
