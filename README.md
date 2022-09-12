@@ -61,15 +61,63 @@ Project Structure
     └── README.md               <- The top-level README for developers/users using this project.
 
 --------
-Approach
+Stack
 --------
-hcwcviwecveckecvwecewc ehuwjcve2cuecye2yuc uy2
+Weights & Biases - Experimentation and Model Registry
+Prefect and Prefect Cloud - Workflow orchestration
+AWS(Lambda, S3, ECR and API gateway) and FastAPI- Cloud Provider and Web framework.
+Terraform - IaC
+Pytest - Unit tests
+Black and Isort - Formatter
+pre-commit: pre commit checks
+Makefile: Code Automation tool
+Github Action: CI/CD
+Docker, Docker compose - Integration test.
 
 --------
 Steps to run the project
 --------
+To have run this project you need to have python and pipenv installed on your system.
 
+Step 1: Clone the repo and move into it.
+```
+git clone https://github.com/heisguyy/mlops-capstone.git && cd mlops-capstone
+```
+Step 2: Setup environment and pre-commit
+```
+make setup
+```
+Step 3: Create a [wandb](https://wandb.ai/site) account if you don't have, create a project called `capstone-mlops` and get your API Key for your weights and bias account and export it to you terminal. You can add this command to `~/.bashrc` to add it permanently or just rerun the command everytime if you close your terminal and you want to continue testing.
+```
+export WANDB_KEY=<your-key>
+```
+Step 4: Create a kaggle account if you do not have one, get your kaggle API token. Download it, create a directory named `.kaggle` in your home directory and add the json file downloaded when you created the API token
+Step 5: Download the dataset into the `data` folder.
+```
+kaggle datasets download -d ahmedshahriarsakib/usa-real-estate-dataset -p data/ --unzip
+```
+Step 6: Go to the `experiments` folder, open the jupyter notebook files and run them according to their numbering.
+Step 7: Run all quality checks, unit test and integration test.
+```
+make integration-test
+```
+Step 8: Check terraform infrastructure.
+```
+make check-infrastructure
+```
+Step 9: Create an prefect cloud account, create an API key and a workspace. Configure your API key and workspace locally.
+```
+prefect cloud login -k <your-api-key>
+```
+you will be prompted to choose the workspace you created and a profile name.
+Step 10: Deploy flow to cloud.
+```
+make deploy-prefect
+```
+
+
+N.B: Prefect pipeline for monitoring is not done and I also have a bug in the deployment causing the API gateway to not respond to requests. I will be working on this after this submission but you won't see it because you will be required reviewing the last commit before my submission.
 
 --------
 
-<p><small>This project uses <a target="_blank" href="https://github.com/heisguyy/cookiecutter-data-science">Olajide Oluwatosin's modification</a> of the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>.
+<p><small>This project uses <a target="_blank" href="https://github.com/heisguyy/cookiecutter-data-science">Olajide Oluwatosin's modification</a> of the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a> with a little more modifications.

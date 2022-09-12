@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 
 import json
+import os
+import signal
 import sys
 from pathlib import Path
-import signal
-import os
+
 import requests
-
-
-from model_monitor.logs_subscriber import subscribe_to_ipc
 from model_monitor.logs_manager import LogsManager
+from model_monitor.logs_subscriber import subscribe_to_ipc
 
 # global variables
 # extension name has to match the file's parent directory name)
