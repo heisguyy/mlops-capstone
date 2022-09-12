@@ -1,6 +1,5 @@
 #!/bin/bash
 
-export WANDB_KEY=202ada5746d12050a9ba2b9834945a9c1c973d08
 export S3_ENDPOINT="http://localhost:4566"
 
 if [ -z "${GITHUB_ACTIONS}" ]; then
