@@ -1,1 +1,1 @@
-from . import main, monitor, schema
+from . import lambda_function, monitor, schema

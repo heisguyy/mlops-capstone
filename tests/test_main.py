@@ -1,7 +1,7 @@
 # pylint: disable=import-error
 from fastapi.testclient import TestClient
 
-from src.main import app
+from src.lambda_function import app
 
 
 def test_root_endpoint():
