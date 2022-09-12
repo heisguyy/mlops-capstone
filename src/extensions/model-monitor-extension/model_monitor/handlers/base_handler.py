@@ -64,7 +64,7 @@ class LogRecord:
 class LogsHandler(ABC):
     @abstractmethod
     def handle_logs(self, records: List[LogRecord]):
-        """Unimplemeted class to log requests to s3.
+        """Unimplemeted class to log requests.
 
         Args:
             records (List[LogRecord]): List of records accumulated.

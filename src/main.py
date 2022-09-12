@@ -2,7 +2,6 @@ import os
 from pickle import load
 
 import numpy as np
-import uvicorn
 import wandb
 from catboost import Pool
 from fastapi import FastAPI, status
@@ -73,8 +72,7 @@ def predict_data(body: InferenceInput):
         price (InferenceOutput): returns price in the format of int defined by the
         pydantic class InferenceOutput
     """
-
-    # log_inputs_for(body)
+    log_inputs_for("1234", [body.dict()])
     location = (
         "_".join(body.state.lower().split()) + "-" + "_".join(body.city.lower().split())
     )
@@ -102,12 +100,9 @@ def predict_data(body: InferenceInput):
         )
     )
 
-    # log_outputs_for(price)
+    log_outputs_for("1234", [{"price": price.item()}])
 
     return {"price": price.item()}
 
 
 handler = Mangum(app=app)
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)

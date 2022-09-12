@@ -37,6 +37,7 @@ response = requests.post(
     },
 ).json()
 
+
 expected_root_response = {
     "body": '{"Message":"Welcome to my capstone project for the mlops zoomcamp."}',
     "headers": {"content-length": "68", "content-type": "application/json"},

@@ -1,4 +1,5 @@
-.SILENT: quality-checks unit-test integration-test build publish test
+.SILENT: quality-checks unit-test integration-test build setup
+WANDB_KEY=
 
 quality-checks:
 	black .
@@ -9,9 +10,11 @@ unit-test: quality-checks
 	pytest .
 
 integration-test: unit-test
-	bash .integration_test/integration
+	WANDB_KEY=${WANDB_KEY} integration_test/integration.sh
 
 build: integration-test
-	docker build --build-arg WANDB_KEY=202ada5746d12050a9ba2b9834945a9c1c973d08 -t mlops-capstone:latest .
+	docker build --build-arg -t mlops-capstone:latest .
 
-publish: build
+setup:
+	pipenv install --dev
+	pre-commit install

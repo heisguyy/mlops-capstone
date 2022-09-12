@@ -8,8 +8,9 @@
 .ipynb_checkpoints/
 
 # exclude data and artifacts from source control by default
-/data/
-/artifacts/
+data/*
+!/data/processed_features.csv
+artifacts/
 
 # Mac OS-specific storage files
 .DS_Store
