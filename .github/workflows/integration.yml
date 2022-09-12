@@ -42,7 +42,7 @@ jobs:
       - name: Integration Test
         working-directory: 'integration_test'
         run: |
-          WANDB_KEY=${{ env.WANDB_KEY }} .integration.sh
+          WANDB_KEY=${{ env.WANDB_KEY }} ./integration.sh
 
 
   tf-plan:
