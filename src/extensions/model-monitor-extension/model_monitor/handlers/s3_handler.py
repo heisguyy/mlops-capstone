@@ -18,19 +18,15 @@ class S3Handler(LogsHandler):
         """
         # pylint: disable=invalid-name
         if not (Configuration.s3_bucket and records):
+            print("No bucket or records.")
             return False
         key = S3Handler.get_key_name(records)
         data = S3Handler.format_records(records)
         if not Configuration.is_test:
             s3 = boto3.client("s3")
         else:
-            s3 = boto3.client(
-                "s3",
-                endpoint_url="http://host.docker.internal:9000",
-                aws_access_key_id="minioadmin",
-                aws_secret_access_key="minioadmin",
-            )
-            print("Defined S3 resources.")
+            s3 = boto3.client("s3", endpoint_url="http://host.docker.internal:4566")
+            print("Resources defined.")
         s3.put_object(Body=data, Bucket=Configuration.s3_bucket, Key=key)
         print("Put in object already")
         return True

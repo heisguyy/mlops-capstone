@@ -5,7 +5,7 @@ from pprint import pprint
 import requests
 from deepdiff import DeepDiff
 
-URL = "http://localhost:8000/2015-03-31/functions/function/invocations"
+URL = "http://localhost:9000/2015-03-31/functions/function/invocations"
 expected_response = {
     "body": '{"price":496737.5}',
     "headers": {"content-length": "27", "content-type": "application/json"},
@@ -37,6 +37,7 @@ response = requests.post(
     },
 ).json()
 
+
 expected_root_response = {
     "body": '{"Message":"Welcome to my capstone project for the mlops zoomcamp."}',
     "headers": {"content-length": "68", "content-type": "application/json"},
@@ -55,8 +56,6 @@ root_response = requests.post(
         "body": {},
     },
 ).json()
-
-pprint(response)
 
 diff = DeepDiff(
     json.loads(response["body"])["price"],

@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+    s3:
+        image: localstack/localstack
+        ports:
+            - "4566:4566"
+        environment:
+            - SERVICES=s3
+    api:
+        image: mlops-capstone:latest
+        ports:
+            - "9000:8080"
+        environment:
+            - IS_TEST=true
+            - MODEL_MONITOR_S3_BUCKET=testing
+            - WANDB_KEY=${WANDB_KEY}
+        volumes:
+            - ~/.aws:/root/.aws:ro

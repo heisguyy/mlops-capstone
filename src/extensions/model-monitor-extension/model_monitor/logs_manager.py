@@ -66,16 +66,19 @@ class LogsManager:
         """
         self.last_time_sent = datetime.now()
         if not self.pending_logs:
+            print("No logs")
             return False
 
         available_handlers = LogsHandler.__subclasses__()
         for handler in available_handlers:
             try:
+                print("Handling logs.")
                 handler().handle_logs(self.pending_logs.values())
             except Exception as err:  # pylint: disable=broad-except
                 print("Exception!! Could not handle sending logs")
                 print(f"error: {err}")
 
+        print("Batch sent.")
         self.pending_logs.clear()
         self.pending_logs_size = 0
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export WANDB_KEY=202ada5746d12050a9ba2b9834945a9c1c973d08
+export S3_ENDPOINT="http://localhost:4566"
 
 if [ -z "${GITHUB_ACTIONS}" ]; then
     cd "$(dirname "$0")"
@@ -20,21 +21,21 @@ else
     echo "no need to build image ${LOCAL_IMAGE_NAME}"
 fi
 
-export CONTAINER_ID=`docker run --detach -p 9000:8080 -e "WANDB_KEY=${WANDB_KEY}" ${LOCAL_IMAGE_NAME}`
-
+docker-compose up -d
 sleep 5
 
-cd "$(dirname "$0")"
+aws --endpoint-url=${S3_ENDPOINT} s3 mb s3://testing
+
 pipenv run python integration.py
 
 ERROR_CODE=$?
 
+echo ${ERROR_CODE}
+
 if [ ${ERROR_CODE} != 0 ]; then
-    docker logs ${CONTAINER_ID}
-    docker stop ${CONTAINER_ID}
-    docker rm ${CONTAINER_ID}
+    docker-compose logs
+    docker-compose down
     exit ${ERROR_CODE}
 fi
 
-docker stop ${CONTAINER_ID}
-docker rm ${CONTAINER_ID}
+docker-compose down

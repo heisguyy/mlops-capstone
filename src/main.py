@@ -72,7 +72,7 @@ def predict_data(body: InferenceInput):
         price (InferenceOutput): returns price in the format of int defined by the
         pydantic class InferenceOutput
     """
-    # log_inputs_for("1234", [body.dict()])
+    log_inputs_for("1234", [body.dict()])
     location = (
         "_".join(body.state.lower().split()) + "-" + "_".join(body.city.lower().split())
     )
@@ -100,7 +100,7 @@ def predict_data(body: InferenceInput):
         )
     )
 
-    # log_outputs_for("1234", [{"price": price.item()}])
+    log_outputs_for("1234", [{"price": price.item()}])
 
     return {"price": price.item()}
 

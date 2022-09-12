@@ -8,8 +8,8 @@ docker run --detach \
 -e MODEL_MONITOR_S3_BUCKET=testing \
 -e IS_TEST=true \
 -p 8000:8080 \
---add-host=host.docker.internal:127.0.0.1 \
-mlops-capstone:monitoring
+-v ~/.aws:/root/.aws:ro  \
+mlops-capstone:latest
 
 
 
