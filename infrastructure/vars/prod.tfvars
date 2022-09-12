@@ -1,4 +1,4 @@
-logs_bucket = "capstone_logs"
+logs_bucket = "capstone-logs"
 lambda_function_local_path = "../src/main.py"
 docker_image_local_path = "Dockerfile"
 ecr_repo_name = "capstone_ecr"
