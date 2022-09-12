@@ -9,7 +9,7 @@ if [ "${LOCAL_IMAGE_NAME}" == "" ]; then
     if [[ -z "${GITHUB_ACTIONS}" ]]; then
         docker buildx build --platform=linux/amd64 -t ${LOCAL_IMAGE_NAME} .
     else
-        docker build -t ${LOCAL_IMAGE_NAME} -f .
+        docker build -t ${LOCAL_IMAGE_NAME} .
     fi
 else
     echo "no need to build image ${LOCAL_IMAGE_NAME}"
