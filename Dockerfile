@@ -18,6 +18,4 @@ COPY src/requirements.txt .
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["/lambda-entrypoint.sh"]
-
-CMD [ "src.main.handler" ]
+ENTRYPOINT ["/lambda-entrypoint.sh", "src.main.handler"]
