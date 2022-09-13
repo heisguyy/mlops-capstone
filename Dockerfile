@@ -12,10 +12,10 @@ RUN chmod +x extension.py
 # Function code
 WORKDIR /var/task
 
-COPY src/*.py src/
 #when you clean pipfile change this
 COPY src/requirements.txt .
-
 RUN pip install -r requirements.txt
+
+COPY src/*.py src/
 
 CMD [ "src.lambda_function.lambda_handler" ]

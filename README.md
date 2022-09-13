@@ -35,9 +35,8 @@ Project Structure
     ├── src                     <- Source code for use in this project.
     │   ├── extensions/         <- Files for lambda extension used to log metrics to s3 bucket.
     │   ├── __init__.py         <- Makes src a Python module
-    │   ├── main.py             <- Contains API codes.
-    │   ├── monitor.py          <- Contains help functions send metrics to lambda extension.
-    │   └── schema.py           <- Contains codes for data validation of both API inputs and Output.
+    │   ├── lambda_function.py  <- Contains lambda function to predict prices.
+    │   └── monitor.py          <- Contains help functions send metrics to lambda extension.
     ├── tests                   <- Tests codes to ensure quality of codes.
     ├── .env                    <- Contains environmental variables like app secrets. This file should not
     │                              be committed or pushed.
