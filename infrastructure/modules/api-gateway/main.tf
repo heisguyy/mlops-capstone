@@ -30,7 +30,6 @@ resource "aws_api_gateway_integration" "gateway_integration_root" {
 
 resource "aws_api_gateway_deployment" "deployment" {
   depends_on = [
-    aws_api_gateway_integration.gateway_integration,
     aws_api_gateway_integration.gateway_integration_root
   ]
 
