@@ -107,7 +107,7 @@ make deploy-prefect
 ```
 
 
-N.B: Prefect pipeline for monitoring is not done and I also have a bug in the deployment causing the API gateway to not respond to requests. I will be working on this after this submission but you won't see it because you will be required reviewing the last commit before my submission.
+N.B: Prefect pipeline for monitoring is not done and I also have a bug in lambda function the deployment causing the API gateway to not respond to requests.
 
 --------
 
