@@ -23,12 +23,12 @@ def download():
     api = wandb.Api()
     model_path = api.artifact(
         "heisguyy/capstone-mlops/capstone-model:latest"
-    ).download()
+    ).download(root="/tmp/")
     with open(f"{model_path}/2022-08-15.cbm", "rb") as model_file:
         model = load(model_file)
     encoder_path = api.artifact(
         "heisguyy/capstone-mlops/capstone-encoder:latest"
-    ).download()
+    ).download(root="/tmp/")
     with open(f"{encoder_path}/2022-08-15.bin", "rb") as encoder_file:
         encoder = load(encoder_file)
 
