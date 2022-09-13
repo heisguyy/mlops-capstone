@@ -56,7 +56,7 @@ Stack
 
 Weights & Biases - Experimentation and Model Registry \
 Prefect and Prefect Cloud - Workflow orchestration \
-AWS(Lambda, S3, ECR and API gateway) and FastAPI- Cloud Provider and Web framework. \
+AWS(Lambda, S3, ECR and API gateway) - Cloud Provider \
 Terraform - IaC \
 Pytest - Unit tests \
 Black and Isort - Formatter \

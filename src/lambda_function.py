@@ -48,8 +48,7 @@ def lambda_handler(
 
     model, encoder = download()
 
-    if context:
-        log_inputs_for("1234", [event])
+    log_inputs_for("1234", [event])
     location = (
         "_".join(event["state"].lower().split())
         + "-"
@@ -78,7 +77,6 @@ def lambda_handler(
             ],
         )
     )
-    if context:
-        log_outputs_for("1234", [{"price": price.item()}])
+    log_outputs_for("1234", [{"price": price.item()}])
 
     return {"price": price.item()}
