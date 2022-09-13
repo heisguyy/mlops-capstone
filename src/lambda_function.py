@@ -18,12 +18,12 @@ def download():
     """
     # pylint: disable=global-variable-undefined
 
-    wandb.login(key=os.getenv("WANDB_KEY"))
+    wandb.login(key=os.getenv("WANDB_KEY"), anonymous="must")
 
     api = wandb.Api()
-    model_path = api.artifact(
-        "heisguyy/capstone-mlops/capstone-model:latest"
-    ).download(root="/tmp/")
+    model_path = api.artifact("heisguyy/capstone-mlops/capstone-model:latest").download(
+        root="/tmp/"
+    )
     with open(f"{model_path}/2022-08-15.cbm", "rb") as model_file:
         model = load(model_file)
     encoder_path = api.artifact(
@@ -48,8 +48,7 @@ def lambda_handler(
 
     model, encoder = download()
 
-    if context:
-        log_inputs_for("1234", [event])
+    log_inputs_for("1234", [event])
     location = (
         "_".join(event["state"].lower().split())
         + "-"
@@ -78,7 +77,6 @@ def lambda_handler(
             ],
         )
     )
-    if context:
-        log_outputs_for("1234", [{"price": price.item()}])
+    log_outputs_for("1234", [{"price": price.item()}])
 
     return {"price": price.item()}
